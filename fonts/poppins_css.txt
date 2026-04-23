@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400 800;
+    src: url('fonts/Manrope-Variable.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700 800;
+    src: url('fonts/Montserrat-Variable.ttf') format('truetype');
+}
