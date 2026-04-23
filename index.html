@@ -28,54 +28,105 @@
         }
 
         /* =========================================================
-           HEADER & CONTROLS
+           FILTER SIDEBAR
         ========================================================= */
-        .app-header {
-            background: linear-gradient(135deg, var(--primary), #9d174d);
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.12);
             color: white;
-            padding: 24px 20px;
-            box-shadow: 0 4px 20px rgba(131, 24, 67, 0.25);
-            position: sticky;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.55); }
+        .icon-btn svg { width: 20px; height: 20px; }
+        .sidebar-toggle {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 340;
+            border-color: rgba(131, 24, 67, 0.35);
+            background: rgba(131, 24, 67, 0.9);
+            color: white;
+            box-shadow: 0 2px 10px rgba(131, 24, 67, 0.25);
+        }
+        .sidebar-toggle:hover { background: rgba(131, 24, 67, 1); border-color: rgba(131, 24, 67, 0.55); }
+        body.sidebar-open .sidebar-toggle { opacity: 0; pointer-events: none; }
+        .filter-sidebar {
+            position: fixed;
             top: 0;
-            z-index: 200;
+            bottom: 0;
+            left: 0;
+            width: min(340px, 88vw);
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            box-shadow: 10px 0 30px rgba(15, 23, 42, 0.12);
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            z-index: 330;
+            display: flex;
+            flex-direction: column;
         }
-        .app-header-inner {
-            max-width: 1400px;
-            margin: 0 auto;
+        body.sidebar-open .filter-sidebar { transform: translateX(0); }
+        .sidebar-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 320;
         }
-        .app-title {
-            font-size: 22px;
+        body.sidebar-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
+        .sidebar-head {
+            padding: 16px 18px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .sidebar-title {
+            font-size: 16px;
             font-weight: 800;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #0f172a;
         }
+        .sidebar-close {
+            border-color: #e2e8f0;
+            background: #f8fafc;
+            color: #334155;
+        }
+        .sidebar-close:hover { background: #f1f5f9; border-color: #cbd5e1; }
         .controls-row {
+            padding: 16px 18px 18px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
         }
         .search-box {
-            flex: 1;
-            min-width: 220px;
-            max-width: 400px;
+            width: 100%;
             position: relative;
         }
         .search-box input {
             width: 100%;
             padding: 10px 14px 10px 38px;
-            border: none;
-            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             font-size: 14px;
-            background: rgba(255,255,255,0.15);
-            color: white;
+            background: #fff;
+            color: #0f172a;
             outline: none;
-            transition: background 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .search-box input::placeholder { color: rgba(255,255,255,0.7); }
-        .search-box input:focus { background: rgba(255,255,255,0.25); }
+        .search-box input::placeholder { color: #94a3b8; }
+        .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(244,63,94,0.12); }
         .search-box svg {
             position: absolute;
             left: 12px;
@@ -83,39 +134,34 @@
             transform: translateY(-50%);
             width: 16px;
             height: 16px;
-            color: rgba(255,255,255,0.7);
+            color: #94a3b8;
             pointer-events: none;
         }
         .control-select {
-            padding: 9px 12px;
-            border: none;
-            border-radius: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             font-size: 13px;
-            background: rgba(255,255,255,0.15);
-            color: white;
+            background: white;
+            color: #0f172a;
             cursor: pointer;
             outline: none;
-            min-width: 130px;
         }
-        .control-select option { background: #fff; color: #1e293b; }
-        .control-select:focus { background: rgba(255,255,255,0.25); }
+        .control-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(244,63,94,0.12); }
         .btn-clear {
-            padding: 9px 16px;
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 10px;
-            background: transparent;
-            color: white;
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #fecdd3;
+            border-radius: 8px;
+            background: #fff1f2;
+            color: var(--primary);
             font-size: 13px;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-clear:hover { background: rgba(255,255,255,0.15); }
-        .results-count {
-            font-size: 13px;
-            opacity: 0.9;
-            margin-left: auto;
-            white-space: nowrap;
-        }
+        .btn-clear:hover { background: #ffe4e6; border-color: #fda4af; }
 
         /* =========================================================
            MAIN CONTENT
@@ -123,7 +169,7 @@
         .main {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 24px 20px 40px;
+            padding: 18px 20px 40px;
         }
         .no-results {
             text-align: center;
@@ -144,9 +190,41 @@
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, 62mm);
-            gap: 4mm;
+            gap: 7mm 5mm;
             justify-content: center;
         }
+        .card-shell {
+            width: 57.23mm;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 7px;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            min-height: 30px;
+        }
+        .card-action {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: var(--primary);
+            width: 34px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(15,23,42,0.08);
+            transition: transform 0.15s, border-color 0.15s, background 0.15s;
+        }
+        .card-action:hover {
+            background: var(--light-bg);
+            border-color: #fda4af;
+            transform: translateY(-1px);
+        }
+        .card-action svg { width: 17px; height: 17px; }
 
         /* =========================================================
            CARD 3D MECHANICS (from ID Card Template.html)
@@ -172,6 +250,19 @@
         .card-wrapper.flipped .card-inner {
             transform: rotateY(180deg) scale(1.02);
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .card-wrapper.zoom-copy {
+            cursor: default;
+            pointer-events: none;
+        }
+        .card-wrapper.zoom-copy .card-inner,
+        .card-wrapper.zoom-copy:hover .card-inner {
+            transform: none;
+            box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+        }
+        .card-wrapper.zoom-copy.flipped .card-inner,
+        .card-wrapper.zoom-copy.flipped:hover .card-inner {
+            transform: rotateY(180deg);
         }
         .card-face {
             position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
@@ -297,13 +388,125 @@
         }
 
         /* =========================================================
+           ZOOM MODAL
+        ========================================================= */
+        .zoom-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: none;
+        }
+        .zoom-modal.open { display: block; }
+        .zoom-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15,23,42,0.72);
+        }
+        .zoom-panel {
+            position: relative;
+            height: calc(100vh - 28px);
+            margin: 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+        }
+        .zoom-toolbar {
+            min-height: 58px;
+            padding: 10px 14px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .zoom-title {
+            font-weight: 800;
+            color: #0f172a;
+            min-width: 180px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .zoom-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: #334155;
+            min-width: 36px;
+            height: 34px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .zoom-control:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .zoom-range {
+            width: 150px;
+            accent-color: var(--primary);
+        }
+        .zoom-percent {
+            width: 54px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #475569;
+        }
+        .zoom-body {
+            overflow: auto;
+            flex: 1;
+            padding: 24px;
+        }
+        .zoom-card-pair {
+            min-width: max-content;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            transform: scale(var(--zoom, 1));
+            transform-origin: top center;
+            transition: transform 0.12s ease;
+        }
+        .zoom-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .zoom-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
            RESPONSIVE
         ========================================================= */
+        @media (min-width: 900px) {
+            body.sidebar-open .main {
+                margin-left: 340px;
+                max-width: calc(1400px - 170px);
+            }
+            body.sidebar-open .sidebar-backdrop {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
         @media (max-width: 640px) {
-            .controls-row { flex-direction: column; align-items: stretch; }
-            .search-box { max-width: none; }
-            .results-count { margin-left: 0; margin-top: 4px; }
-            .card-grid { grid-template-columns: repeat(auto-fill, 62mm); gap: 3mm; }
+            .main { padding: 14px 10px 34px; }
+            .card-grid { grid-template-columns: repeat(auto-fill, 62mm); gap: 5mm 3mm; }
+            .zoom-panel { height: 100vh; margin: 0; border-radius: 0; }
+            .zoom-toolbar { align-items: center; }
+            .zoom-title { flex-basis: 100%; min-width: 0; }
+            .zoom-body { padding: 16px 12px; }
+            .zoom-card-pair { flex-direction: column; gap: 18px; align-items: center; }
+            .zoom-range { width: 112px; }
         }
         @media (max-width: 420px) {
             .card-grid { grid-template-columns: 62mm; }
@@ -312,13 +515,19 @@
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="app-header-inner">
-            <div class="app-title">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                Student ID Cards — Interactive Viewer
-            </div>
-            <div class="controls-row">
+    <button class="icon-btn sidebar-toggle" id="sidebarToggle" type="button" title="Filters" aria-label="Open filters" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <aside class="filter-sidebar" id="filterSidebar" aria-label="Filters">
+        <div class="sidebar-head">
+            <div class="sidebar-title">Filters</div>
+            <button class="icon-btn sidebar-close" id="sidebarClose" type="button" title="Close filters" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <div class="controls-row">
                 <div class="search-box">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     <input type="text" id="searchInput" placeholder="Search by name, ID, class, house..." autocomplete="off">
@@ -335,10 +544,8 @@
                     <option value="id_asc">Card ID A → Z</option>
                 </select>
                 <button class="btn-clear" id="clearBtn">Clear Filters</button>
-                <div class="results-count" id="resultsCount"></div>
             </div>
-        </div>
-    </header>
+    </aside>
 
     <main class="main">
         <div id="cardGrid" class="card-grid"></div>
@@ -349,6 +556,23 @@
         <div class="pagination" id="pagination"></div>
         <div class="page-info" id="pageInfo"></div>
     </main>
+
+    <div class="zoom-modal" id="zoomModal" aria-hidden="true">
+        <div class="zoom-backdrop" id="zoomBackdrop"></div>
+        <div class="zoom-panel" role="dialog" aria-modal="true" aria-labelledby="zoomTitle">
+            <div class="zoom-toolbar">
+                <div class="zoom-title" id="zoomTitle">ID Card Preview</div>
+                <button class="zoom-control" id="zoomOutBtn" type="button" title="Zoom out" aria-label="Zoom out">-</button>
+                <input class="zoom-range" id="zoomRange" type="range" min="70" max="220" value="120" step="10" aria-label="Zoom level">
+                <button class="zoom-control" id="zoomInBtn" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+                <div class="zoom-percent" id="zoomPercent">120%</div>
+                <button class="zoom-control" id="zoomCloseBtn" type="button" title="Close" aria-label="Close zoom">Close</button>
+            </div>
+            <div class="zoom-body" id="zoomBody">
+                <div class="zoom-card-pair" id="zoomContent"></div>
+            </div>
+        </div>
+    </div>
 
     <script>
         /* =========================================================
@@ -375,8 +599,28 @@
             filterGender: document.getElementById('filterGender'),
             sortBy: document.getElementById('sortBy'),
             clearBtn: document.getElementById('clearBtn'),
-            resultsCount: document.getElementById('resultsCount'),
+            sidebarToggle: document.getElementById('sidebarToggle'),
+            sidebarClose: document.getElementById('sidebarClose'),
+            sidebarBackdrop: document.getElementById('sidebarBackdrop'),
+            zoomModal: document.getElementById('zoomModal'),
+            zoomBackdrop: document.getElementById('zoomBackdrop'),
+            zoomTitle: document.getElementById('zoomTitle'),
+            zoomBody: document.getElementById('zoomBody'),
+            zoomContent: document.getElementById('zoomContent'),
+            zoomRange: document.getElementById('zoomRange'),
+            zoomPercent: document.getElementById('zoomPercent'),
+            zoomOutBtn: document.getElementById('zoomOutBtn'),
+            zoomInBtn: document.getElementById('zoomInBtn'),
+            zoomCloseBtn: document.getElementById('zoomCloseBtn'),
         };
+
+        let zoomValue = 120;
+
+        function setSidebarOpen(open) {
+            document.body.classList.toggle('sidebar-open', open);
+            els.sidebarToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            els.sidebarToggle.setAttribute('aria-label', open ? 'Close filters' : 'Open filters');
+        }
 
         /* =========================================================
            POPULATE FILTER DROPDOWNS
@@ -454,7 +698,7 @@
             const start = (currentPage - 1) * CARDS_PER_PAGE;
             const pageItems = filtered.slice(start, start + CARDS_PER_PAGE);
 
-            els.resultsCount.textContent = total > 0 ? `${total} card${total !== 1 ? 's' : ''}` : 'No cards';
+            // results count removed with header
 
             if (total === 0) {
                 els.grid.innerHTML = '';
@@ -475,9 +719,16 @@
             // Click-to-flip for mobile
             document.querySelectorAll('.card-wrapper').forEach(w => {
                 w.addEventListener('click', (e) => {
+                    if (e.target.closest('.card-action')) return;
                     if (window.innerWidth <= 768) {
                         w.classList.toggle('flipped');
                     }
+                });
+            });
+            document.querySelectorAll('.card-action').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openZoomById(btn.dataset.cardId);
                 });
             });
         }
@@ -490,15 +741,27 @@
             div.textContent = str || '';
             return div.innerHTML;
         }
+        function escAttr(str) {
+            return esc(str).replace(/"/g, '&quot;');
+        }
 
-        function cardHTML(s) {
+        function cardHTML(s, opts = {}) {
             const photoSrc = s.photo_path && !s.photo_path.startsWith('http')
                 ? 'photos/' + s.photo_path
                 : (s.photo_path || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.name || 'Student') + '&size=150&background=ccc&color=fff');
             const qrSrc = s.qr_src || ('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(s.card_id || ''));
+            const wrapperClass = `card-wrapper${opts.zoom ? ' zoom-copy' : ''}${opts.back ? ' flipped' : ''}`;
+            const zoomButton = opts.zoom ? '' : `
+                <div class="card-actions">
+                    <button class="card-action" type="button" title="Zoom front and back" aria-label="Zoom front and back" data-card-id="${escAttr(s.card_id)}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                    </button>
+                </div>`;
 
             return `
-            <div class="card-wrapper">
+            <div class="card-shell">
+                ${zoomButton}
+            <div class="${wrapperClass}">
                 <div class="card-inner">
                     <!-- FRONT -->
                     <div class="card-face">
@@ -606,7 +869,42 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>`;
+        }
+
+        function setZoom(value) {
+            zoomValue = Math.max(70, Math.min(220, Number(value) || 120));
+            els.zoomRange.value = zoomValue;
+            els.zoomPercent.textContent = `${zoomValue}%`;
+            els.zoomContent.style.setProperty('--zoom', zoomValue / 100);
+        }
+
+        function openZoomById(cardId) {
+            const student = STUDENTS.find(s => (s.card_id || '').toString() === (cardId || '').toString());
+            if (!student) return;
+            els.zoomTitle.textContent = `${student.name || 'Student'} - ${student.card_id || ''}`;
+            els.zoomContent.innerHTML = `
+                <div class="zoom-side">
+                    <div class="zoom-label">Front</div>
+                    ${cardHTML(student, { zoom: true })}
+                </div>
+                <div class="zoom-side">
+                    <div class="zoom-label">Back</div>
+                    ${cardHTML(student, { zoom: true, back: true })}
+                </div>`;
+            els.zoomModal.classList.add('open');
+            els.zoomModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            setZoom(120);
+            els.zoomBody.scrollTo({ top: 0, left: 0 });
+        }
+
+        function closeZoom() {
+            els.zoomModal.classList.remove('open');
+            els.zoomModal.setAttribute('aria-hidden', 'true');
+            els.zoomContent.innerHTML = '';
+            document.body.style.overflow = '';
         }
 
         /* =========================================================
@@ -664,6 +962,28 @@
             els.sortBy.value = 'class_name_asc';
             applyFilters();
         });
+
+        els.sidebarToggle.addEventListener('click', () => {
+            setSidebarOpen(!document.body.classList.contains('sidebar-open'));
+        });
+        els.sidebarClose.addEventListener('click', () => setSidebarOpen(false));
+        els.sidebarBackdrop.addEventListener('click', () => setSidebarOpen(false));
+        els.zoomCloseBtn.addEventListener('click', closeZoom);
+        els.zoomBackdrop.addEventListener('click', closeZoom);
+        els.zoomRange.addEventListener('input', () => setZoom(els.zoomRange.value));
+        els.zoomOutBtn.addEventListener('click', () => setZoom(zoomValue - 10));
+        els.zoomInBtn.addEventListener('click', () => setZoom(zoomValue + 10));
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (els.zoomModal.classList.contains('open')) closeZoom();
+                else setSidebarOpen(false);
+            }
+        });
+
+        // Open sidebar by default on desktop
+        if (window.innerWidth >= 900) {
+            setSidebarOpen(true);
+        }
 
         // Initial render
         applyFilters();
